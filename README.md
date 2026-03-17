@@ -1,4 +1,6 @@
-# st_exact_deRham
+# st_exact_deRham 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19074708.svg)](https://doi.org/10.5281/zenodo.19074708)
 
 Exactness-preserving discrete de Rham complexes under Bloch-periodic boundary conditions.
 
