@@ -18,12 +18,10 @@ Verified on SC cubic, Kelvin (BCC), C15 (Laves), Weaire-Phelan, and random Voron
 
 ## Paper
 
-Submitted to SIAM Journal on Numerical Analysis.
+Submitted to Electronic Transactions on Numerical Analysis (ETNA).
 
 - `paper/main.tex` — manuscript
-- `paper/supplementary.tex` — supplementary material (Voronoi proofs)
 - `paper/main.pdf` — compiled PDF
-- `paper/supplementary.pdf` — compiled SM
 
 ## Tests
 

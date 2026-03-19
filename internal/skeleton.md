@@ -1,269 +1,242 @@
-# Paper A1 — Argument Skeleton (v2)
-
-**Title:** Exactness-preserving discrete de Rham complexes under Bloch-periodic boundary conditions
-**One sentence:** Standard DEC breaks exact sequences under Bloch BCs; we fix it via recurrence and characterize the spectral consequences.
-
----
-
-## Argument flow
-
-### §1. Introduction (2 pages)
-
-**Key sentence (must appear in intro):**
-> "No construction is known to us that produces an exact discrete de Rham
-> complex under Bloch-periodic boundary conditions on unstructured
-> polyhedral meshes."
-
-(Hedged: "no construction is known to us" not "no exact complex exists."
-Backed by: Hirani 2003, Desbrun 2005, Schulz 2018, Mönkölä 2023 — none
-address exactness under Bloch BCs.)
-
-**Opening:** DEC is widely used for Maxwell on periodic structures.
-Several references claim DEC avoids spurious modes (Schulz 2018, Mönkölä 2023).
-FEEC (Arnold-Falk-Winther 2006, 2010) established that exact subcomplexes are
-necessary for stable Hodge Laplacian discretization.
-
-**The gap:** Under Bloch-periodic BCs on unstructured polyhedral meshes,
-d₁(k)d₀(k) ≠ 0 for generic k. The exact sequence breaks. This is a
-structural failure, not an implementation bug.
-
-**Our contribution:**
-1. We prove that standard DEC breaks exactness under Bloch BCs (Proposition 1)
-2. We construct an exact d₁(k) via face-boundary recurrence (Theorem 1)
-3. We prove uniqueness, canonical K, and kernel = V (Künneth)
-4. We show that inexactness causes rank pollution, Hodge hybridization,
-   and eigenvalue redistribution (§6)
-5. As application, we identify Voronoi tessellations as geometries where
-   the exact complex yields optimal dispersion (§7)
+# SKELETON v3 — CR Math Note (FINAL)
+# "Exactness-preserving discrete de Rham complexes under Bloch-periodic boundary conditions"
+# Target: Comptes Rendus Mathématique, ~8 pages, ~50k caractere
 
 ---
 
-### §2. Setup (2 pages)
+## §1. Introduction [~1 pag]
 
-**Defines:**
-- Periodic cell complex (V, E, F, C) on T³
-- Incidence matrices d₀, d₁ (topological)
-- Hodge stars ⋆₀, ⋆₁, ⋆₂ (metric, diagonal)
-- Bloch-twisted operators: d₀(k)[e,v] = d₀[e,v]·exp(ik·n_e·L)
-- Curl-curl operator: K(k) = d₁(k)†⋆₂ d₁(k)
-- Test structures (table): Kelvin, C15, WP, SC, random Voronoi
+**Paragraf 1 — Context:**
+DEC pe complexe poliedrale: d₀, d₁, secvența d₁d₀=0.
+Maxwell eigenvalue problem → exactitatea = necesară și suficientă (Boffi 2010).
 
-No claims. Pure setup.
+**Paragraf 2 — Gap:**
+Sub Bloch BC pe mesh nestructurate: standard sparge exactitatea.
+FEEC [Arnold-Falk-Winther] = simplicial. DEC existent = Yee structurat.
+Nicio construcție exactă pe mesh poliedrale general sub Bloch.
 
----
+**Paragraf 3 — Viewpoint + Contribuție:**
+Bloch BC = sistem local rang-1 L_k pe T³. Construcția standard = conexiune
+cu curbură nenulă. Noi: unica conexiune plată care păstrează exactitatea.
 
-### §3. The exactness problem (3 pages)
+Contribuții:
+(i)   eșec structural al standardului (Prop. 1)
+(ii)  construcție explicită prin recurență (Thm. 1)
+(iii) unicitate + K canonic (Thm. 1)
+(iv)  dim ker K = |V| via Künneth (Prop. 2)
 
-**Proposition 1:** Standard Bloch curl d₁_std breaks exactness.
-- Statement: If face f has ≥2 boundary edges with distinct lattice shifts
-  sharing a vertex, then d₁_std(k)d₀(k) ≠ 0 for generic k.
-- Proof: phase cancellation argument (3 lines)
-
-**Corollary 1:** No per-edge phase assignment can fix this.
-- Proof: intra-face contradiction (same-shift edges forced to different phases)
-
-**Numerical evidence:**
-- ‖d₁_std d₀‖ ~ O(1) on all test structures (table)
-- n_spur = 3-16 spurious modes depending on structure/direction (table)
+Footnote: Code available at github.com/alex-toader/st_exact_deRham.
 
 ---
 
-### §4. Exactness-preserving construction (4 pages)
+## §2. Setup [~1 pag]
 
-**Lemma 1:** Flat holonomy. H_f = ∏ phases around face = 1.
-- Proof: contractibility of face in R³ → zero net lattice translation
+**§2.1 Complex celular pe T³.**
+(V, E, F, C), orientări, shift-uri nₑ ∈ Z³.
+Incidență: d₀ ∈ R^{|E|×|V|}, d₁ ∈ R^{|F|×|E|}. Identitate d₁d₀ = 0 la k=0.
 
-**Theorem 1 — MAIN RESULT:** Recurrence construction.
-- Statement: For each face f with boundary edges e₀,...,e_{n-1}:
-  set φ₀=1, then φᵢ = -σᵢ₋₁φᵢ₋₁ d₀[eᵢ₋₁,vᵢ]/(σᵢ d₀[eᵢ,vᵢ]).
-  Then d₁(k)d₀(k) = 0 for all k.
-- Proof: substitution into vertex equations + Lemma 1 for closure
-- Cost: O(Σ n_f), same as standard d₁
+**§2.2 Operatori Bloch.**
+d₀(k): (d₀(k)u)ₑ = e^{ik·nₑL} u_{head} − u_{tail}. Formulă explicită.
+d₁_std(k): d₁_std[f,e] = d₁[f,e] · e^{ik·nₑL}. Faze independente per-muchie.
 
-**Corollary 2:** Uniqueness up to per-face gauge λ_f.
+**§2.3 Hodge stars.**
+⋆₁, ⋆₂ diagonale (circumcentric). K = d₁†⋆₂d₁, M = ⋆₁.
 
-**Proposition 2:** Canonical K. Any two constructions give same K.
-
-**Proposition 3:** Kernel dimension = |V| for generic k.
-- Proof: 3 steps (injectivity of d₀, exactness, Künneth on T³).
-
-**Remark:** Bloch cohomology β(Γ) = (1,3,3,1), β(k≠0) = (0,0,0,0).
-
-**Formal result count for §3-§4:**
-3 Propositions, 1 Theorem, 1 Lemma, 2 Corollaries. All with proofs.
+**§2.4 Structuri test (o frază).**
+"Verified on five periodic polyhedral complexes: SC cubic lattice, three
+Voronoi tessellations (Kelvin/BCC, C15/Laves, Weaire-Phelan/A15), and
+random Voronoi meshes (50 cells, 10 seeds)."
 
 ---
 
-### §5. Spectral consequences (3 pages)
+## §3. Eșecul construcției standard [~1 pag]
 
-Numerical results, not formal claims. Presented as "Results" not "Theorems."
+**Propoziție 1 (Structural failure).**
+If face f has ≥2 boundary edges with distinct lattice shifts nₐ ≠ n_b
+sharing a vertex, then d₁_std(k)d₀(k) ≠ 0 for all k outside the hyperplane
+{e^{ik·(nₐ−n_b)L} = 1}. The failure occurs on an open dense set of k.
 
-**Result 1:** Spectral pollution eliminated.
-- Exact: n_zero = V at all k, all structures, all directions.
-- Standard: n_zero = V − n_spur. Table: 5 structures × 3 directions.
+*Proof (4-5 rânduri):*
+La vârful comun v, contribuțiile la (d₁d₀)[f,v] poartă faze e^{ik·nₐL}
+și e^{ik·n_bL}. Anularea cere e^{ik·(nₐ−n_b)L}=1 — hiperplan.
+Eșuează generic când nₐ ≠ n_b. □
 
-**Result 2:** Hodge splitting restored.
-- Exact: gradient overlap < 10⁻¹² on all physical modes.
-- Standard: 85-97% of modes mixed. Table: 3 structures.
+**Corolar 1 (No per-edge fix).**
+No function φ: E×R³ → C* can make d̃₁(k)d₀(k) = 0 generically.
+The obstruction is per-face (2-cochain), not per-edge (1-cochain).
 
-**Result 3:** Dispersion convergence.
-- Exact: c² → 1 as O(1/N²), p=2.00, R²=1.0000.
-- Standard: c² oscillates, no convergence. Figure: log-log.
+*Proof (3-4 rânduri):*
+By uniqueness (Thm. 1), exact phases are face-dependent. A per-edge
+multiplicator assigns the same factor regardless of face. Contradiction. □
 
-**Result 4:** Band structure.
-- Figure: Γ-X-M-R-Γ exact vs standard.
-
----
-
-### §6. Consequences of inexactness (2 pages, condensed)
-
-Framing: "What goes wrong WITHOUT exactness — structural explanation."
-NOT a separate theory. Consequences of §3 failure, explaining §5 numerics.
-
-**3 results only** (strongest from W3):
-
-**Result 5:** Rank pollution = rank excess (algebraic identity).
-- rank(d₁_std) − rank(d₁_exact) = n_spur. Not empirical.
-
-**Result 6:** Hodge hybridization converges to random baseline.
-- Standard: gradient overlap → nV/nE ≈ 0.51. Universal (3 structures).
-- Deep non-perturbative: not a small correction.
-
-**Result 7:** Trace conservation.
-- Σ(eigenvalue shifts) + Σ(spurious eigenvalues) = 0.
-- Total trace is topological invariant.
-
-**Dropped** (to avoid stealing focus):
-- Level spacing Poisson→GUE → separate paper or appendix
-- IPR surface/bulk scaling → separate paper
-- Perturbation regimes → separate paper
+Notă numerică (1 frază): "‖d₁_std d₀‖ ∈ [5, 12] on all tested structures;
+the exact construction achieves 10⁻¹⁵ (§5)."
 
 ---
 
-### §7. Application: Voronoi tessellations (2-3 pages)
+## §4. Construcția exactă [~2.5 pag] — NUCLEUL
 
-Framing: NOT "We prove Voronoi optimality."
-YES: "This illustrates the effect of exactness in an optimal metric setting."
+**Teorema 1 (Exactness-preserving Bloch-twisted complex).**
 
-**Proposition 4:** G = Vol·I on any periodic Voronoi tessellation.
-- Proof: divergence theorem on dual cells. (1 page, self-contained.)
-- Explicit link: "Proposition 4 provides the metric ingredient; combined with
-  Theorem 1 (exactness), this yields exact isotropic dispersion."
+*Enunț:*
+Let (V,E,F,C) be a periodic polyhedral cell complex on T³ and k ∈ R³.
+There exists a local operator d₁(k): C¹ → C² supported on face boundaries
+satisfying d₁(k)d₀(k) = 0 for all k ∈ R³.
 
-**Result 8:** Combined with Theorem 1 → ω² = |k|² + O(|k|⁴).
-- Numerical verification on 3 cubic + 5 random Voronoi.
-- Standard DEC: c² = 0.52-1.68, direction-dependent.
-- Note: "Full spectral analysis of the Voronoi case, including
-  the converse and moment conservation, will appear in [A2]."
+Construction: for face f with ordered boundary edges e₀,...,eₙ₋₁:
+  (i)   φ₀ = 1
+  (ii)  φᵢ = −σᵢ₋₁ φᵢ₋₁ · d₀(k)[eᵢ₋₁,vᵢ] / (σᵢ · d₀(k)[eᵢ,vᵢ])
+  (iii) d₁(k)[f,eᵢ] = σᵢ φᵢ
 
----
+Uniqueness: any local d₁ with d₁d₀=0 on ∂f satisfies d₁[f,:] = λ_f · d₁^{ex}[f,:]
+with λ_f ∈ C*, |λ_f|=1. The solution space is 1-dimensional per face.
 
-### §8. Numerical experiments (2 pages)
+Canonical K: K(k) = d₁(k)†⋆₂d₁(k) is independent of seed, orientation,
+or per-face gauge.
 
-Consolidated figures and tables from §5 + §7.
-- Fig 1: Mesh wireframes (Kelvin + random Voronoi)
-- Fig 2: Band structure comparison (exact vs standard)
-- Fig 3: Convergence log-log
-- Table: universality across 5+ structures
+*Proof:*
 
----
+→ d₁d₀=0 la face f dă n ecuații la vârfuri. La vᵢ (i=1,...,n-1):
+  d₁[f,eᵢ₋₁]·d₀(k)[eᵢ₋₁,vᵢ] + d₁[f,eᵢ]·d₀(k)[eᵢ,vᵢ] = 0.
+  Recurența (ii) rezolvă φ₁,...,φₙ₋₁ din φ₀=1.
 
-### §9. Discussion (1 page)
+→ Ecuația rămasă la v₀ e satisfăcută ⟺ holonomia pe față = 1.
 
-- FEEC connection: exact subcomplex on polyhedral mesh with diagonal Hodge stars.
-  Not simplicial, not Whitney forms — complementary to existing FEEC constructions.
-- What Voronoi adds: metric isotropy sufficient for c²=1. Necessity → [A2].
-- Open: non-flat connections (magnetic flux), non-abelian gauge, non-T³ topology.
-- 2D validation with photonic crystal benchmarks → [Paper B].
+  **Lemma (Flat holonomy).** H_f = ∏ e^{ik·nᵢL} = e^{ik·(Σnᵢ)L} = 1,
+  deoarece Σnᵢ = 0 (cale închisă în R³ pe lift contractibil al lui f). □_Lemma
 
----
+→ Unicitate: recurență de ordinul 1, n-1 ecuații în n necunoscute
+  → spațiu 1-dimensional per față.
 
-## Final formal result count
+→ K canonic: |λ_f|²=1 se anulează în d₁†⋆₂d₁. □
 
-| Type | Count | Where |
-|------|-------|-------|
-| Theorem | 1 | §4 (recurrence — THE result) |
-| Proposition | 4 | §3 (failure, no fix), §4 (canonical K, kernel), §7 (G=Vol·I) |
-| Lemma | 1 | §4 (holonomy) |
-| Corollary | 2 | §3 (no per-edge fix), §4 (uniqueness) |
-| Numerical Results | 8 | §5 (4), §6 (3), §7 (1) |
-| **Total formal** | **8** | |
+**Remark (Geometric viewpoint).**
+Bloch BC define a rank-1 local system L_k on T³. The standard construction
+is a discrete connection on L_k with nonzero curvature. The recurrence of
+Theorem 1 produces the unique flat connection induced by d₀(k). Exactness
+of the cochain complex is equivalent to flatness of the connection.
 
-8 formal results, not 17. Much cleaner for reviewer.
+**Propoziție 2 (Kernel dimension).**
 
----
+*Enunț:*
+For generic k (e^{ikⱼLⱼ} ≠ 1 for all j), dim ker K(k) = |V|
+and ker K(k) = im d₀(k).
 
-## Claim dependency graph
+*Proof (3 pași):*
+1. d₀(k) injective: d₀(k)u=0 forces uᵢ=0 for all i (iterate on toric
+   cycles with monodromies ≠ 1). → dim im d₀(k) = |V|.
+2. Exactness (Thm. 1) → im d₀ ⊆ ker d₁ → ker K ⊇ im d₀.
+3. Künneth on T³ = S¹×S¹×S¹ with coefficients in L_k: each S¹ factor
+   with monodromy λⱼ ≠ 1 is acyclic → H*(T³, L_k) = 0 → ker d₁ = im d₀. □
 
-```
-                    ┌─── Cor 2 (unique)
-                    ├─── Prop 2 (canonical K)
-Lem 1 ──→ THM 1 ───┤
-                    ├─── Prop 3 (kernel = V)
-                    ├─── Results 1-4 (spectral gains)
-                    └─── Result 8 (c²=1, with Prop 4)
-
-Prop 1 ──→ Cor 1 (no per-edge fix)
-       ──→ Results 5-7 (inexactness consequences)
-
-Prop 4 (G=Vol·I, independent) ──→ Result 8 (c²=1)
-```
-
-Two roots: Theorem 1 (positive) and Proposition 1 (negative).
-One independent geometric result: Proposition 4 (Voronoi).
-Everything else follows.
+**Complexul complet (1 frază):**
+The same recurrence extends to d₂(k), giving d₂d₁=0. Betti numbers:
+β(Γ)=(1,3,3,1), β(k≠0)=(0,0,0,0).
 
 ---
 
-## What reviewer sees
+## §5. Verificare numerică [~0.75 pag]
 
-**Quick scan (2 min):**
-- Title: exact de Rham under Bloch — clear, specific
-- Abstract: problem → solution → consequences
-- 1 theorem, 4 propositions — not overloaded
-- Voronoi in §7 as application, not core
+**Tabel 1** (compact, 4×3):
 
-**Detailed read (1 hour):**
-- §3: "I didn't know standard DEC fails here" → interest
-- §4: proofs are algebraic, short, verifiable → confidence
-- §5: clean numerics, exact vs standard contrast → convinced
-- §6: "ah, so THAT's why standard is so bad" → understanding
-- §7: "nice that Voronoi works, natural example" → completeness
-- §9: connects to FEEC → "this person knows the field"
+| Structure | n_zero exact | n_zero std | n_spur |
+|-----------|-------------|-----------|--------|
+| Kelvin N=2 | 96 = |V| | 90 | 6 |
+| C15 N=1 | 136 = |V| | 127 | 9 |
+| WP N=1 | 46 = |V| | 43 | 3 |
+| SC N=3 | 27 = |V| | 22 | 5 |
 
-**Verdict:** "Clear contribution. One main theorem. Well-supported."
+**Hodge splitting (1 frază):**
+"On the exact complex, 0 out of 192 eigenmodes show gradient contamination;
+on the standard complex, 73-92% of modes are hybridized (gradient overlap
+0.88-0.94, consistent with the random baseline |V|/|E|)."
+
+**Convergență (1 frază):**
+"Phase velocity converges at rate p=2.00 (Kelvin N=2..5, confirmed on SC);
+the standard construction does not converge."
+
+**Figură 1:** Band structure Γ-X-M-R-Γ, Kelvin N=2.
+  (a) Exact DEC: clean bands, twofold acoustic degeneracy.
+  (b) Standard DEC: spurious bands near zero.
+
+**Universalitate (1 frază):**
+"Exactness and correct kernel verified on all five structures including
+10/10 random Voronoi seeds."
 
 ---
 
-## New findings from test suite (17 Mar 2026)
+## §6. Aplicație: Voronoi [~0.5 pag]
 
-These emerged during testing and may inform paper text:
+**Remark (Voronoi optimality).**
+On any periodic Voronoi tessellation of T³, the discrete metric tensors
+satisfy G = H = Vol·I (via the divergence theorem on dual/primal cells;
+details in [A2]). Combined with Theorem 1, this yields
+ω² = |k|² + O(|k|⁴) by Schur complement reduction onto the 3D harmonic
+subspace at Γ. Verified: c² ∈ [0.9993, 0.9997] on cubic structures and
+random Voronoi seeds.
 
-1. **n_spur ordering [100]<[110]<[111] universal** on all 3 cubic structures.
-   Kelvin (6,12,14), C15 (9,15,16), WP (3,5,7). Combinatorial origin: more
-   boundary-crossing edges along higher-symmetry directions. Remark for §3.
+---
 
-2. **n_spur extensive on random Voronoi**: deficit 15 (V=331), 19 (V=347).
-   Consistent with W3 R13 (pollution ∝ surface area). §3 material.
+## §7. Concluzii [~2-3 fraze]
 
-3. **Exactness purely topological**: ‖d₁d₀‖ = 7.86e-16 identically at ε=0%..50%
-   mesh perturbation. Zero geometric dependence. Strong statement for §4.
+The standard Bloch-periodic extension of DEC does not preserve the exact
+sequence on unstructured polyhedral meshes — a structural, not numerical,
+failure. The face-boundary recurrence of Theorem 1 produces a canonical
+exact complex, unique up to per-face gauge, with kernel dimension |V| and
+correct twisted de Rham cohomology. Extensions to non-flat connections,
+non-abelian gauge, and non-T³ topologies remain open.
 
-4. **n_zero > V at BZ boundary (TRIM)**: n_zero=98 at k=k_BZ, rank(d₀)=95.
-   Expected from Künneth (H¹≠0 when e^{ikL}=1). Documented, not a bug. §4 remark.
+---
 
-5. **Standard c² oscillates with N**: 1.55→2.48→1.93→1.03 (Kelvin N=2..5).
-   Non-convergent. c²=1.03 at N=5 is accidental. §5 material.
+## Referințe [~15 intrări]
 
-6. **c²_std on standard DEC is SPURIOUS, not acoustic**: first non-zero eigenvalue
-   on standard DEC is an expelled gauge mode (88-94% gradient). Standard cannot
-   even identify the acoustic mode. More dramatic than just c²≠1. §5 material.
+[1-2]   Arnold, Falk, Winther (FEEC, 2006 + 2010)
+[3]     Boffi (eigenvalue problems, 2010)
+[4]     Bossavit (computational EM, 1998)
+[5-6]   Bott-Tu / Hatcher (Künneth, algebraic topology)
+[7]     Christiansen (stability DEC, 2008)
+[8]     Desbrun, Hirani, Leok, Marsden (DEC, 2005)
+[9]     Di Pietro, Droniou (DDR, 2020)
+[10]    Hiptmair (Maxwell FE, 2002)
+[11]    Hirani (DEC thesis, 2003)
+[12-14] Mönkölä / Schulz / Teixeira (DEC periodic)
+[15]    [A2] Toader, in preparation (Voronoi isotropy + converse)
 
-7. **Trace conservation at all k**: tr(M⁻¹K) rel_diff = 1.78e-16 across 5
-   k-directions. Topological invariant, not coincidence. §6 material.
+---
 
-8. **Both ⋆₁ and ⋆₂ matter for c²=1**: perturbing ⋆₂ gives Δc²=0.024,
-   perturbing ⋆₁ gives Δc²=0.012. Neither alone sufficient. §7 material.
+## DECIZII DE DESIGN
 
-9. **‖d₁_std d₀‖ ~ O(k⁰·⁹⁶)** at small k (3 points), O(k⁰·⁹⁰) on full range.
-   Confirms O(k) scaling with higher-order correction. §3 material.
+### Tăiat față de ESAIM
+- ✗ Reproducibility section → footnote GitHub în §1
+- ✗ Tabelul cu 57 teste → GitHub only
+- ✗ §6 vechi (rank-pollution, hybridization, trace conservation) → eliminat complet
+- ✗ §7 vechi (Voronoi lung, sensitivitate metrică) → Remark 0.5 pag
+- ✗ Discussion (comparație FE, limitări) → eliminat
+- ✗ Supplementary material → referință [A2]
+- ✗ Subfigura (c) cu ‖d₁d₀‖ → eliminată
+- ✗ Tabelul structuri din §2 → frază în proză
+
+### Ce am luat din review-uri
+- ✅ Viewpoint "conexiune plată pe L_k" în intro
+- ✅ Remark geometric explicit după Teoremă
+- ✅ Teorema: bloc complet (existență+construcție+unicitate+K canonic)
+- ✅ Main result first: Teorema înaintea Lemei
+- ✅ §3 verificare → trimite la §5
+- ✅ Voronoi ca Remark
+- ✅ Referințe ~15 (nu 35)
+- ✅ Subfigura (c) scoasă, doar (a)+(b)
+
+### Ce NU am luat
+- ❌ "Taie §5 la o singură afirmație" — tabel + figură + fraze condensate rămân
+- ❌ Varianta 2 abstractă de teoremă — prea opacă
+- ❌ "Scoate procentele" — rămân într-o frază
+
+## Nucleul matematic (7 enunțuri)
+
+1. **Propoziție 1** §3 — eșecul structural
+2. **Corolar 1** §3 — per-edge fix imposibil
+3. **Teorema 1** §4 — recurența (existență + construcție + unicitate + K canonic)
+4. **Lemma** §4 — holonomie plată (în proof-ul Teoremei)
+5. **Remark** §4 — viewpoint: conexiune plată pe L_k
+6. **Propoziție 2** §4 — dim ker = |V| via Künneth
+7. **Remark** §6 — Voronoi isotropy + ω²=|k|²+O(|k|⁴)
